@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Commbadge Dev</title>
+
+    <script type="text/javascript" src="http://livejs.com/live.js"></script>
+  </head>
+  <body>
+    <p>
+      <span> Sending Command: </span>
+      <span> 
+        <input type="text" id="display-command" maxlength="20" minlength="5"/>
+      </span>
+    </p>
+  </body>
+
+  <script>
+    window.onload = function () {
+      var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
+      var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList
+      var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
+
+      var commands = ['open node playground'];
+      var grammar = '#JSGF V1.0; grammar commands; public <command> = ' + commands.join(' | ') + ' ;'
+
+      var recognition = new SpeechRecognition();
+      var speechRecognitionList = new SpeechGrammarList();
+      speechRecognitionList.addFromString(grammar, 1);
+      recognition.grammars = speechRecognitionList;
+      //recognition.continuous = false;
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      var commandInput = document.querySelector('#display-command');
+      
+      document.body.onclick = function() {
+        recognition.start();
+        console.log('Ready to receive a color command.');
+      }
+
+      recognition.onresult = function(event) {
+        console.log("result!");
+        var last = event.results.length - 1;
+        var command = event.results[last][0].transcript;
+        console.log(command);
+        commandInput.textContent = command;
+
+        console.log('sending command');
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "http://localhost:3000/node_proto", true);
+        xhr.send(null);
+      }
+    }
+  </script>
+</html>
