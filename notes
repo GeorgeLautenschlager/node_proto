@@ -1,2 +1,7 @@
 starting the ssh agent so you can push changes on windows:
 start-ssh-agent
+
+running commbadge:
+node router
+node ps_runner
+open interpreter in chrome
