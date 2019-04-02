@@ -7,6 +7,7 @@ const server = http.createServer((req, res) => {
   const command = req.url.split('/')[1];
 
   res.setHeader('Content-Type', 'text/html');
+  res.setHeader('Access-Control-Allow-Origin', '*');
 
   if(command == 'node_proto') {
     nodeProto();
